@@ -3,14 +3,17 @@
 //2. Silva Reyes, Santiago Miguel
 //3. Meneses Roncal, Matias Alonso
 #include <vector>
+#include <iostream>
 using namespace std;
-struct Node {
+struct Elemento {
     int value;
-    int row;
-    int col;
+    int fila;
+    int columna;
 };
+
+
 class Heap {
-    vector<Node> heap;
+    vector<Elemento> heap;
     void heapify_down(int i) {
         int smallest = i;
         int left = 2 * i + 1;
@@ -34,20 +37,20 @@ class Heap {
         }
     }
 public:
-    void insert(Node node) {
+    void insert(Elemento node) {
         heap.push_back(node);
         heapify_up(heap.size() - 1);
     }
-    Node extract_min() {
+    Elemento top() {
         if (heap.size() == 0) {
             cout<<"Heap vacio";
         }
-        Node root = heap[0];
+        Elemento raiz = heap[0];
         heap[0] = heap.back();
         heap.pop_back();
         heapify_down(0);
 
-        return root;
+        return raiz;
     }
     bool empty() const {
         return heap.size() == 0;
@@ -56,16 +59,15 @@ public:
 class Solution {
 public:
     int kthSmallest(vector<vector<int>>& matrix, int k) {
-        int n = matrix.size();
-        Heap heap1;
-        for (int i = 0; i < n; i++) {
-            heap1.insert({matrix[i][0], i, 0});
+        Heap heap;
+        for (int i = 0; i < matrix.size(); i++) {
+            heap.insert({matrix[i][0], i, 0});
         }
-        Node element;
+        Elemento element;
         for (int i = 0; i < k; i++) {
-            element = heap1.extract_min();
-            if (element.col + 1 < n) {
-                heap1.insert({matrix[element.row][element.col + 1], element.row, element.col + 1});
+            element = heap.top();
+            if (element.columna + 1 < matrix.size()) {
+                heap.insert({matrix[element.fila][element.columna + 1], element.fila, element.columna + 1});
             }
         }
         return element.value;
