@@ -3,6 +3,11 @@
 //2. Silva Reyes, Santiago Miguel
 //3. Meneses Roncal, Matias Alonso
 
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
 template<typename T>
 class Heap {
     string type;
@@ -11,37 +16,37 @@ class Heap {
     void heapify_down(int i) {
         int left = 2 * i + 1;
         int right = 2 * i + 2;
-        int smallest = i;
+        int largest = i;
 
-        if (type == "MIN_HEAP") {
-            if (left < elements.size() && compare(elements[left], elements[smallest])) {
-                smallest = left;
+        if (type == "MAX_HEAP") {
+            if (left < elements.size() && Comparar(elements[left], elements[largest])) {
+                largest = left;
             }
-            if (right < elements.size() && compare(elements[right], elements[smallest])) {
-                smallest = right;
+            if (right < elements.size() && Comparar(elements[right], elements[largest])) {
+                largest = right;
             }
         }
 
-        if (smallest != i) {
-            swap(elements[i], elements[smallest]);
-            heapify_down(smallest);
+        if (largest != i) {
+            swap(elements[i], elements[largest]);
+            heapify_down(largest);
         }
     }
 
     void heapify_up(int i) {
         int parent = (i - 1) / 2;
 
-        if (i && compare(elements[i], elements[parent])) {
+        if (i && Comparar(elements[i], elements[parent])) {
             swap(elements[i], elements[parent]);
             heapify_up(parent);
         }
     }
 
-    bool compare(const T& a, const T& b) {
+    bool Comparar(const T& a, const T& b) {
         if (a.first == b.first) {
-            return a.second > b.second;  
+            return a.second < b.second;  // lexicographical order
         }
-        return a.first < b.first;
+        return a.first > b.first;  // higher frequency comes first
     }
 
 public:
@@ -63,7 +68,7 @@ public:
         heapify_down(0);
     }
 
-    T top() { 
+    T top() {
         if (elements.size() == 0) {
             throw out_of_range("Heap is empty");
         }
@@ -83,22 +88,17 @@ public:
             frequencyMap[word]++;
         }
 
-        Heap<pair<int, string>> minHeap("MIN_HEAP");
+        Heap<pair<int, string>> maxHeap("MAX_HEAP");
 
         for (const auto& [word, freq] : frequencyMap) {
-            minHeap.insert({freq, word});
-            if (minHeap.size() > k) {
-                minHeap.pop(); 
-            }
+            maxHeap.insert({freq, word});
         }
 
         vector<string> result;
-        while (minHeap.size() > 0) {
-            result.push_back(minHeap.top().second);
-            minHeap.pop();
+        for (int i = 0; i < k; ++i) {
+            result.push_back(maxHeap.top().second);
+            maxHeap.pop();
         }
-
-        reverse(result.begin(), result.end());
 
         return result;
     }
