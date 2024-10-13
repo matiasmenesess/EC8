@@ -61,7 +61,11 @@ public:
     int kthSmallest(vector<vector<int>>& matrix, int k) {
         Heap heap;
         for (int i = 0; i < matrix.size(); i++) {
-            heap.insert({matrix[i][0], i, 0});
+            Elemento el;
+            el.value = matrix[i][0];
+            el.fila=i;
+            el.columna=0;
+            heap.insert(el);
         }
         Elemento element;
         for (int i = 0; i < k; i++) {
