@@ -98,8 +98,10 @@ public:
 
             score++;
 
-            if (first > 0) maxHeap.insert(first);
-            if (second > 0) maxHeap.insert(second);
+            if (first > 0)
+                maxHeap.insert(first);
+            if (second > 0)
+                maxHeap.insert(second);
         }
 
         return score;
